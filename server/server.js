@@ -1,3 +1,4 @@
+// server/server.js
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -11,34 +12,29 @@ import cartRouter from './routes/cartRoute.js';
 import addressRouter from './routes/addressRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import { stripeWebhooks } from './controllers/orderController.js';
+import serverless from 'serverless-http';
 
 const app = express();
 
-// Connect to DB and Cloudinary at the time of import, not runtime in Vercel
 await connectDB();
 await connectCloudinary();
 
-// Stripe webhook endpoint should use raw body parsing
-app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
-
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
   origin: ['http://localhost:5173'],
   credentials: true,
 }));
+app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
 
-// Routes
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/address', addressRouter);
 app.use('/api/order', orderRouter);
-
 app.get('/', (req, res) => res.send("✅ API is Working and DB connected"));
 
-// ❌ DO NOT use app.listen in Vercel
-// ✅ Instead, export the app
-export default app;
+// ✅ This replaces app.listen()
+const handler = serverless(app);
+export default handler;
