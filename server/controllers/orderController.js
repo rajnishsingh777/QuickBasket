@@ -96,7 +96,7 @@ export const placeOrderStripe = async (req, res) => {
     return res.json({ success: false, message: error.message });
   }
 };
-import Stripe from 'stripe';
+
 
 export const stripeWebhooks = async (request, response) => {
   // Stripe Gateway Initialize
