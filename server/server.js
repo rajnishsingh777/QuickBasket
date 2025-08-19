@@ -1,9 +1,10 @@
+// server.js
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import connectDB from './configs/db.js';
 import 'dotenv/config';
-import userRouter from './routes/userRoute.js'; // ✅ import correctly
+import userRouter from './routes/userRoute.js';
 import sellerRouter from './routes/sellerRoute.js';
 import connectCloudinary from './configs/cloudinary.js';
 import productRouter from './routes/productRoute.js';
@@ -13,20 +14,27 @@ import orderRouter from './routes/orderRoute.js';
 import { stripeWebhooks } from './controllers/orderController.js';
 
 const app = express();
-const port = process.env.PORT || 4000;
 
-await connectDB(); // ✅ ensure DB connects
+// ✅ connect services before starting server
+await connectDB();
 await connectCloudinary();
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: ['http://localhost:5173'],
-  credentials: true,
-}));
-app.post('/stripe',express.raw({type:'application/json'}),stripeWebhooks)
 
-// ✅ MOUNT USER ROUTER
+// ✅ Allow frontend on Vercel
+app.use(cors({
+  origin: [
+    "http://localhost:5173",  // local dev
+    "https://quick-basket-cyan.vercel.app/" // your Vercel frontend domain
+  ],
+  credentials: true
+}));
+
+// ✅ Stripe webhook needs raw body
+app.post('/stripe', express.raw({ type: 'application/json' }), stripeWebhooks);
+
+// ✅ Routers
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRouter);
@@ -34,9 +42,7 @@ app.use('/api/cart', cartRouter);
 app.use('/api/address', addressRouter);
 app.use('/api/order', orderRouter);
 
-
+// Health check
 app.get('/', (req, res) => res.send("✅ API is Working and DB connected"));
 
-app.listen(port, () => {
-  console.log(`🚀 Server is running on http://localhost:${port}`);
-});
+export default app;
