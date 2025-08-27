@@ -26,7 +26,8 @@ app.use(cookieParser());
 app.use(cors({
   origin: [
     "http://localhost:5173",  // local dev
-    "https://quick-basket-cyan.vercel.app" // your Vercel frontend domain
+    "https://quick-basket-cyan.vercel.app", // Vercel frontend
+    "https://quickbasket-1-097t.onrender.com" // Render frontend
   ],
   credentials: true
 }));
