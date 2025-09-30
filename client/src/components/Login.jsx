@@ -1,33 +1,32 @@
-import React, { useState } from 'react';
-import { useAppContext } from '../context/AppContext';
-import toast from 'react-hot-toast';
+import React, { useState } from "react";
+import { useAppContext } from "../context/AppContext";
+import toast from "react-hot-toast";
 
 const Login = () => {
-  const { setShowUserLogin,setUser,axios,navigate } = useAppContext();
-  const [state, setState] = useState('login');
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { setShowUserLogin, setUser, axios, navigate } = useAppContext();
+  const [state, setState] = useState("login");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  
-    const onSubmitHandler = async (event)=>{
-try {
-event.preventDefault();
-const {data} = await axios.post( `/api/user/${state} `,{name, email, password
-
-});
-if (data. success) {
-navigate('/')
-setUser(data. user)
-setShowUserLogin(false)
-}else{
-toast. error(data.message)
-
-}
-
-}catch (error) {
-toast. error(error.message)
-}
+  const onSubmitHandler = async (event) => {
+    try {
+      event.preventDefault();
+      const { data } = await axios.post(`/api/user/${state} `, {
+        name,
+        email,
+        password,
+      });
+      if (data.success) {
+        navigate("/");
+        setUser(data.user);
+        setShowUserLogin(false);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -55,12 +54,12 @@ toast. error(error.message)
             className="w-full max-w-md flex flex-col items-center"
           >
             <h2 className="text-3xl text-gray-900 font-semibold">
-              {state === 'login' ? 'Sign In' : 'Sign Up'}
+              {state === "login" ? "Sign In" : "Sign Up"}
             </h2>
             <p className="text-sm text-gray-500 mt-2 mb-6">
-              {state === 'login'
-                ? 'Welcome back! Please sign in to continue'
-                : 'Join us by creating your account'}
+              {state === "login"
+                ? "Welcome back! Please sign in to continue"
+                : "Join us by creating your account"}
             </p>
 
             {/* Google Sign In */}
@@ -77,12 +76,14 @@ toast. error(error.message)
             {/* Divider */}
             <div className="flex items-center gap-4 w-full mb-5">
               <div className="w-full h-px bg-gray-300" />
-              <p className="text-sm text-gray-500 whitespace-nowrap">or sign in with email</p>
+              <p className="text-sm text-gray-500 whitespace-nowrap">
+                or sign in with email
+              </p>
               <div className="w-full h-px bg-gray-300" />
             </div>
 
             {/* Name Field for Sign Up */}
-            {state === 'register' && (
+            {state === "register" && (
               <input
                 type="text"
                 placeholder="Full name"
@@ -114,7 +115,7 @@ toast. error(error.message)
             />
 
             {/* Remember Me & Forgot Password */}
-            {state === 'login' && (
+            {state === "login" && (
               <div className="w-full flex items-center justify-between text-sm text-gray-500 mb-4">
                 <label className="flex items-center gap-2">
                   <input type="checkbox" />
@@ -131,27 +132,27 @@ toast. error(error.message)
               type="submit"
               className="w-full bg-primary hover:bg-primary-dull transition-all text-white py-2 rounded-full mb-3"
             >
-              {state === 'register' ? 'Create Account' : 'Login'}
+              {state === "register" ? "Create Account" : "Login"}
             </button>
 
             {/* Toggle Sign In/Up */}
             <p className="text-sm text-gray-500">
-              {state === 'register' ? (
+              {state === "register" ? (
                 <>
-                  Already have an account?{' '}
+                  Already have an account?{" "}
                   <span
                     className="text-primary cursor-pointer underline"
-                    onClick={() => setState('login')}
+                    onClick={() => setState("login")}
                   >
                     Sign In
                   </span>
                 </>
               ) : (
                 <>
-                  Don’t have an account?{' '}
+                  Don’t have an account?{" "}
                   <span
                     className="text-primary cursor-pointer underline"
-                    onClick={() => setState('register')}
+                    onClick={() => setState("register")}
                   >
                     Sign Up
                   </span>
@@ -166,4 +167,3 @@ toast. error(error.message)
 };
 
 export default Login;
-
