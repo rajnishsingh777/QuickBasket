@@ -12,6 +12,7 @@ import cartRouter from './routes/cartRoute.js';
 import addressRouter from './routes/addressRoute.js';
 import orderRouter from './routes/orderRoute.js';
 import { stripeWebhooks } from './controllers/orderController.js';
+import serverless from 'serverless-http';
 
 const app = express();
 
@@ -26,7 +27,8 @@ app.use(cookieParser());
 app.use(cors({
   origin: [
     "http://localhost:5173",  // local dev
-    "https://quick-basket-cyan.vercel.app/" // your Vercel frontend domain
+    "https://quick-basket-cyan.vercel.app", // Vercel frontend
+    "https://quickbasket-1-097t.onrender.com" // Render frontend
   ],
   credentials: true
 }));
@@ -45,4 +47,6 @@ app.use('/api/order', orderRouter);
 // Health check
 app.get('/', (req, res) => res.send("✅ API is Working and DB connected"));
 
+// Export for Vercel
+export const handler = serverless(app);
 export default app;

@@ -33,7 +33,7 @@ export const AppContextProvider = ({ children }) => {
       setIsSeller(false);
     }
   };
-  // fetc user auth status
+  // fetch user auth status
   const fetchUser = async () => {
     try {
       const { data } = await axios.get("/api/user/is-auth");
@@ -59,6 +59,7 @@ export const AppContextProvider = ({ children }) => {
       toast.error(error.message);
     }
   };
+
   // Add Product to Cart
   const addToCart = (itemId) => {
     let cartData = structuredClone(cartItems);
@@ -91,6 +92,7 @@ export const AppContextProvider = ({ children }) => {
     toast.success("Removed from Cart");
     setCartItems(cartData);
   };
+
   // Get Cart Count
   const getCartCount = () => {
     let totalCount = 0;
