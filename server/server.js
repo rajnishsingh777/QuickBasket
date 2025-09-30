@@ -23,12 +23,13 @@ await connectCloudinary();
 app.use(express.json());
 app.use(cookieParser());
 
-// ✅ Allow frontend on Vercel
+// ✅ Allow frontend on Vercel and Render
 app.use(cors({
   origin: [
     "http://localhost:5173",  // local dev
     "https://quick-basket-cyan.vercel.app", // Vercel frontend
-    "https://quickbasket-1-097t.onrender.com" // Render frontend
+    "https://quickbasket-1-097t.onrender.com", // Render frontend
+    "https://quickbasket-cyan.vercel.app" // Vercel frontend (without trailing slash)
   ],
   credentials: true
 }));
@@ -46,6 +47,18 @@ app.use('/api/order', orderRouter);
 
 // Health check
 app.get('/', (req, res) => res.send("✅ API is Working and DB connected"));
+
+// Debug endpoint to check cookies
+app.get('/debug/cookies', (req, res) => {
+  console.log('Debug - All cookies:', req.cookies);
+  console.log('Debug - Headers:', req.headers);
+  res.json({ 
+    success: true, 
+    cookies: req.cookies,
+    headers: req.headers,
+    message: 'Check server logs for detailed cookie information'
+  });
+});
 
 // Export for Vercel
 export const handler = serverless(app);

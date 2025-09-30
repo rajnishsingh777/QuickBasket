@@ -24,7 +24,6 @@ export const register = async (req, res) => {
       secure: process.env.NODE_ENV === "production", // Use secure cookies in production
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // Cross-site cookie support
       maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration time (7 days)
-      domain: process.env.NODE_ENV === "production" ? ".vercel.app" : undefined, // Domain for production
     });
     return res.json({
       success: true,
@@ -63,7 +62,6 @@ export const login = async (req, res) => {
       secure: process.env.NODE_ENV === "production", // Use secure cookies in production
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // Cross-site cookie support
       maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration time (7 days)
-      domain: process.env.NODE_ENV === "production" ? ".vercel.app" : undefined, // Domain for production
     });
     return res.json({
       success: true,
@@ -78,11 +76,27 @@ export const login = async (req, res) => {
 // Check Auth : /api/user/is-auth
 export const isAuth = async (req, res) => {
   try {
+    console.log('isAuth - Request body:', req.body);
+    console.log('isAuth - Request cookies:', req.cookies);
+    
     const { userId } = req.body;
+    
+    if (!userId) {
+      console.log('isAuth - No userId in request body');
+      return res.json({ success: false, message: 'No user ID provided' });
+    }
+    
     const user = await User.findById(userId).select("-password");
+    
+    if (!user) {
+      console.log('isAuth - User not found');
+      return res.json({ success: false, message: 'User not found' });
+    }
+    
+    console.log('isAuth - User found:', user.email);
     return res.json({ success: true, user });
   } catch (error) {
-    console.log(error.message);
+    console.log('isAuth - Error:', error.message);
     res.json({ success: false, message: error.message });
   }
 };
