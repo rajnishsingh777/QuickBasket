@@ -154,7 +154,7 @@ const AddAddress = () => {
 
         <img
           className="md:mr-16 mb-16 md:mt-0"
-          src={assets.add_address_iamge}
+          src={assets.add_address_image}
           alt="Add"
         />
       </div>
