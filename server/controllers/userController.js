@@ -25,9 +25,13 @@ export const register = async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // Cross-site cookie support
       maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration time (7 days)
     });
+    
+    // For Render subdomains, also send token in response body
+    // This works around Render's subdomain cookie limitations
     return res.json({
       success: true,
       user: { email: user.email, name: user.name },
+      token: token // Send token for localStorage storage
     });
   } catch (error) {
     console.log(error.message);
@@ -63,9 +67,13 @@ export const login = async (req, res) => {
       sameSite: process.env.NODE_ENV === "production" ? "none" : "strict", // Cross-site cookie support
       maxAge: 7 * 24 * 60 * 60 * 1000, // Cookie expiration time (7 days)
     });
+    
+    // For Render subdomains, also send token in response body
+    // This works around Render's subdomain cookie limitations
     return res.json({
       success: true,
       user: { email: user.email, name: user.name },
+      token: token // Send token for localStorage storage
     });
   } catch (error) {
     console.log(error.message);

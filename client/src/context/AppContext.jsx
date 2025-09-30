@@ -7,6 +7,15 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
+// Add request interceptor to include token in Authorization header
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 export const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
@@ -36,12 +45,25 @@ export const AppContextProvider = ({ children }) => {
   // fetch user auth status
   const fetchUser = async () => {
     try {
+      // Check if we have a token in localStorage
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setUser(null);
+        return;
+      }
+      
       const { data } = await axios.get("/api/user/is-auth");
       if (data.success) {
         setUser(data.user);
         setCartItems(data.user.cartItems);
+      } else {
+        // Token is invalid, remove it
+        localStorage.removeItem('token');
+        setUser(null);
       }
     } catch (error) {
+      // Token is invalid or expired, remove it
+      localStorage.removeItem('token');
       setUser(null);
     }
   };
@@ -114,6 +136,20 @@ export const AppContextProvider = ({ children }) => {
     return Math.floor(totalAmount * 100) / 100;
   };
 
+  // Logout function
+  const logout = async () => {
+    try {
+      await axios.post("/api/user/logout");
+    } catch (error) {
+      console.log("Logout error:", error);
+    } finally {
+      localStorage.removeItem('token');
+      setUser(null);
+      setCartItems({});
+      toast.success("Logged out successfully");
+    }
+  };
+
   useEffect(() => {
     fetchUser();
     fetchSeller();
@@ -157,6 +193,7 @@ export const AppContextProvider = ({ children }) => {
     axios,
     fetchProducts,
     setCartItems,
+    logout,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

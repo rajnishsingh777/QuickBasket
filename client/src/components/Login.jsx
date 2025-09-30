@@ -18,9 +18,14 @@ const Login = () => {
         password,
       });
       if (data.success) {
+        // Store token in localStorage for Render subdomain compatibility
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+        }
         navigate("/");
         setUser(data.user);
         setShowUserLogin(false);
+        toast.success(state === "login" ? "Login successful!" : "Registration successful!");
       } else {
         toast.error(data.message);
       }
