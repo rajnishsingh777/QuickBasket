@@ -1,5 +1,8 @@
-import app from './server.js';
+// index.js
+import app from "./server.js";
 
-export default async function handler(req, res) {
-  await app(req, res);
-}
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+});
