@@ -154,7 +154,7 @@ const Login = () => {
                 </>
               ) : (
                 <>
-                  Don’t have an account?{" "}
+                  Don't have an account?{" "}
                   <span
                     className="text-primary cursor-pointer underline"
                     onClick={() => setState("register")}
@@ -164,6 +164,21 @@ const Login = () => {
                 </>
               )}
             </p>
+
+            {/* Admin/Seller Login Button */}
+            <div className="w-full mt-4 pt-4 border-t border-gray-200">
+              <p className="text-xs text-gray-400 text-center mb-3">Are you a seller?</p>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowUserLogin(false);
+                  navigate('/seller');
+                }}
+                className="w-full bg-gray-100 hover:bg-gray-200 transition-all text-gray-700 py-2 rounded-full text-sm font-medium"
+              >
+                Seller Login
+              </button>
+            </div>
           </form>
         </div>
       </div>

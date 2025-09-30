@@ -13,8 +13,13 @@ const SellerLogin = () => {
     try {
       const { data } = await axios.post('/api/seller/login', { email, password });
       if (data.success) {
+        // Store seller token in localStorage for Render subdomain compatibility
+        if (data.token) {
+          localStorage.setItem('sellerToken', data.token);
+        }
         setIsSeller(true);
         navigate('/seller');
+        toast.success("Seller login successful!");
       } else {
         toast.error(data.message);
       }
@@ -58,6 +63,18 @@ const SellerLogin = () => {
           />
         </div>
         <button className="bg-primary text-white w-full py-2 rounded-md cursor-pointer">Login</button>
+        
+        {/* Back to Customer Login */}
+        <div className="w-full mt-4 pt-4 border-t border-gray-200">
+          <p className="text-xs text-gray-400 text-center mb-3">Not a seller?</p>
+          <button
+            type="button"
+            onClick={() => navigate('/')}
+            className="w-full bg-gray-100 hover:bg-gray-200 transition-all text-gray-700 py-2 rounded-md text-sm font-medium"
+          >
+            Back to Customer Login
+          </button>
+        </div>
       </div>
     </form>
   );
